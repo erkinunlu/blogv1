@@ -2,10 +2,11 @@
 import useSWR from "swr";
 import { useState } from "react";
 
+type Tag = { id: number; name: string; slug: string };
 const fetcher = (u: string) => fetch(u).then((r) => r.json());
 
 export default function AdminTags() {
-	const { data, mutate } = useSWR("/api/tags", (u) => fetcher(u).then((d) => d.tags));
+	const { data, mutate } = useSWR<Tag[]>("/api/tags", (u) => fetcher(u).then((d) => d.tags as Tag[]));
 	const [name, setName] = useState("");
 	const [loading, setLoading] = useState(false);
 
@@ -31,7 +32,7 @@ export default function AdminTags() {
 				<button onClick={addTag} disabled={loading} className="bg-brand-blue text-white px-3 py-2 rounded">Ekle</button>
 			</div>
 			<ul className="space-y-2">
-				{(data || []).map((t: any) => (
+				{(data || []).map((t) => (
 					<li key={t.id} className="flex items-center justify-between border rounded px-3 py-2">
 						<span>#{t.name}</span>
 						<button onClick={() => deleteTag(t.slug)} className="text-red-600 text-sm">Sil</button>
