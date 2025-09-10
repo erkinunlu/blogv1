@@ -11,8 +11,8 @@ const config: Config = {
 		extend: {
 			colors: {
 				brand: {
-					blue: "#2563eb", // canlı mavi
-					orange: "#f97316", // canlı turuncu
+					blue: "#2563eb",
+					orange: "#f97316",
 					pink: "#ec4899",
 					violet: "#7c3aed",
 					teal: "#14b8a6",
@@ -22,6 +22,9 @@ const config: Config = {
 			},
 		},
 	},
-	plugins: [],
+	plugins: [require("daisyui")],
+	daisyui: {
+		themes: ["pastel", "emerald", "lemonade", "corporate", "dark"],
+	},
 };
 export default config;
