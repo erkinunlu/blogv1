@@ -6,7 +6,7 @@ const fetcher = (u: string) => fetch(u).then((r) => r.json());
 type Comment = { id: number; name: string; email: string; content: string; approved: boolean };
 
 export default function AdminComments() {
-	const { data: comments, mutate } = useSWR<Comment[]>("/api/comments", (u) => fetcher(u).then((d) => d.comments as Comment[]));
+	const { data: comments, mutate } = useSWR<Comment[]>("/api/comments", (u: string) => fetcher(u).then((d) => d.comments as Comment[]));
 
 	async function approve(id: number) {
 		await fetch(`/api/comments/${id}`, { method: "PATCH" });
