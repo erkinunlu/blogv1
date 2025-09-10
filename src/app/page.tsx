@@ -2,7 +2,20 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PostCard from "@/components/PostCard";
 
-async function fetchPosts(q?: string, category?: string) {
+interface Category { id: number; name: string; slug: string }
+interface Author { id: number; name: string; email: string }
+export interface PostDto {
+	id: number;
+	title: string;
+	slug: string;
+	excerpt?: string;
+	coverImage?: string;
+	categories: Category[];
+	author?: Author;
+	createdAt: string;
+}
+
+async function fetchPosts(q?: string, category?: string): Promise<PostDto[]> {
 	const params = new URLSearchParams();
 	if (q) params.set("q", q);
 	if (category) params.set("category", category);
@@ -24,8 +37,8 @@ export default async function Home() {
 			</section>
 			<main className="mx-auto max-w-6xl px-4">
 				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 -mt-8">
-					{posts.map((p: any) => (
-						<PostCard key={p._id} post={p} />
+					{posts.map((p) => (
+						<PostCard key={p.id} post={p} />
 					))}
 				</div>
 			</main>

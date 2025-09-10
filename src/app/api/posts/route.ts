@@ -13,6 +13,15 @@ const schema = z.object({
 	published: z.boolean().default(false),
 });
 
+function getUserIdFromAuthResponse(res: NextResponse | undefined): number | null {
+	try {
+		const id = (res as NextResponse).headers.get("x-user-id");
+		return id ? Number(id) : null;
+	} catch {
+		return null;
+	}
+}
+
 export async function GET(req: NextRequest) {
 	const { searchParams } = new URL(req.url);
 	const q = searchParams.get("q") || "";
@@ -50,7 +59,8 @@ export async function POST(req: NextRequest) {
 	const slug = slugify(title, { lower: true, strict: true });
 	const exists = await prisma.post.findUnique({ where: { slug } });
 	if (exists) return NextResponse.json({ message: "Post exists" }, { status: 409 });
-	const userId = Number((authRes as any)?.headers?.get("x-user-id"));
+	const userId = getUserIdFromAuthResponse(authRes as unknown as NextResponse);
+	if (!userId) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 	const post = await prisma.post.create({
 		data: {
 			title,
