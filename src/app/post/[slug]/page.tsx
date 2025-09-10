@@ -1,18 +1,14 @@
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import Image from "next/image";
+import { prisma } from "@/lib/prisma";
 
 async function fetchPost(slug: string) {
-	const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/posts/${slug}`, { next: { revalidate: 60 } });
-	if (!res.ok) return null;
-	const data = await res.json();
-	return data.post as {
-		title: string;
-		coverImage?: string;
-		createdAt: string;
-		author?: { name?: string };
-		content: string;
-	};
+	const post = await prisma.post.findUnique({
+		where: { slug },
+		include: { categories: true, author: { select: { name: true } } },
+	});
+	return post;
 }
 
 export default async function PostPage({ params }: { params: { slug: string } }) {

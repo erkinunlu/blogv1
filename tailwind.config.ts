@@ -11,11 +11,13 @@ const config: Config = {
 		extend: {
 			colors: {
 				brand: {
-					blue: "#2563eb",
-					orange: "#f97316",
-					gray: "#6b7280",
-					light: "#f5f7fb",
-					dark: "#0b1220",
+					blue: "#2563eb", // canlı mavi
+					orange: "#f97316", // canlı turuncu
+					pink: "#ec4899",
+					violet: "#7c3aed",
+					teal: "#14b8a6",
+					light: "#f3f6ff",
+					dark: "#0a0f1f",
 				},
 			},
 		},
