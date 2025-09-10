@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Footer() {
 	return (
 		<footer className="mt-12 bg-gradient-to-r from-brand-blue/10 via-brand-pink/10 to-brand-teal/10 dark:from-white/5 dark:via-white/5 dark:to-white/5">
@@ -9,9 +11,9 @@ export default function Footer() {
 				<div>
 					<h5 className="font-semibold mb-3">Keşfet</h5>
 					<ul className="space-y-2 text-sm opacity-90">
-						<li><a href="/" className="hover:text-brand-blue">Anasayfa</a></li>
-						<li><a href="/admin" className="hover:text-brand-blue">Admin</a></li>
-						<li><a href="/" className="hover:text-brand-blue">Son Yazılar</a></li>
+						<li><Link href="/" className="hover:text-brand-blue">Anasayfa</Link></li>
+						<li><Link href="/admin" className="hover:text-brand-blue">Admin</Link></li>
+						<li><Link href="/" className="hover:text-brand-blue">Son Yazılar</Link></li>
 					</ul>
 				</div>
 				<div>

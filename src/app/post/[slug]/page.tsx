@@ -5,6 +5,8 @@ import { prisma } from "@/lib/prisma";
 import Sidebar from "@/components/Sidebar";
 import LatestStrip from "@/components/LatestStrip";
 
+type Category = { id: number; name: string; slug: string };
+
 async function fetchPost(slug: string) {
 	const post = await prisma.post.findUnique({
 		where: { slug },
@@ -36,7 +38,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
 					<article className="prose dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: post.content }} />
 				</div>
 				<div className="lg:col-span-4">
-					<Sidebar categories={categories as any} />
+					<Sidebar categories={categories as unknown as Category[]} />
 				</div>
 			</main>
 			<Footer />
