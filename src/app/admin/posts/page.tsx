@@ -8,8 +8,8 @@ type Category = { id: number; name: string; slug: string };
 type Post = { id: number; title: string; slug: string };
 
 export default function AdminPosts() {
-	const { data: posts, mutate } = useSWR<Post[]>("/api/posts", (u) => fetcher(u).then((d) => d.posts as Post[]));
-	const { data: categories } = useSWR<Category[]>("/api/categories", (u) => fetcher(u).then((d) => d.categories as Category[]));
+	const { data: posts, mutate } = useSWR<Post[]>("/api/posts", (u: string) => fetcher(u).then((d) => d.posts as Post[]));
+	const { data: categories } = useSWR<Category[]>("/api/categories", (u: string) => fetcher(u).then((d) => d.categories as Category[]));
 	const [title, setTitle] = useState("");
 	const [content, setContent] = useState("<p>Yeni içerik</p>");
 	const [categoryIds, setCategoryIds] = useState<number[]>([]);
