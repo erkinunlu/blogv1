@@ -2,6 +2,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PostCard from "@/components/PostCard";
 import Sidebar from "@/components/Sidebar";
+import LatestStrip from "@/components/LatestStrip";
 import { prisma } from "@/lib/prisma";
 
 interface Category { id: number; name: string; slug: string }
@@ -17,20 +18,22 @@ export interface PostDto {
 	createdAt: string;
 }
 
-async function getData(): Promise<{ posts: PostDto[]; categories: Category[]; tags: { id: number; name: string; slug: string }[] }> {
-	const [posts, categories, tags] = await Promise.all([
+async function getData(): Promise<{ posts: PostDto[]; categories: Category[]; tags: { id: number; name: string; slug: string }[]; latest: { id: number; title: string; slug: string }[] }> {
+	const [posts, categories, tags, latest] = await Promise.all([
 		prisma.post.findMany({ include: { categories: true, author: { select: { id: true, name: true, email: true } } }, orderBy: { createdAt: "desc" }, take: 50 }),
 		prisma.category.findMany({ orderBy: { name: "asc" } }),
 		prisma.tag.findMany({ orderBy: { name: "asc" } }),
+		prisma.post.findMany({ select: { id: true, title: true, slug: true }, orderBy: { createdAt: "desc" }, take: 6 }),
 	]);
-	return { posts: posts as unknown as PostDto[], categories: categories as unknown as Category[], tags };
+	return { posts: posts as unknown as PostDto[], categories: categories as unknown as Category[], tags, latest };
 }
 
 export default async function Home() {
-	const { posts, categories, tags } = await getData();
+	const { posts, categories, tags, latest } = await getData();
 	return (
 		<div>
 			<Navbar />
+			<LatestStrip posts={latest} />
 			<section className="bg-gradient-to-r from-brand-pink/10 via-brand-blue/10 to-brand-teal/10 dark:from-brand-dark dark:via-brand-dark dark:to-brand-dark">
 				<div className="mx-auto max-w-6xl px-4 py-14">
 					<h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-3">Modern, Renkli ve Hızlı Blog</h1>
