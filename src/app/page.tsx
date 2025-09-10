@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PostCard from "@/components/PostCard";
+import { prisma } from "@/lib/prisma";
 
 interface Category { id: number; name: string; slug: string }
 interface Author { id: number; name: string; email: string }
@@ -15,17 +16,17 @@ export interface PostDto {
 	createdAt: string;
 }
 
-async function fetchPosts(q?: string, category?: string): Promise<PostDto[]> {
-	const params = new URLSearchParams();
-	if (q) params.set("q", q);
-	if (category) params.set("category", category);
-	const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/posts?${params.toString()}`, { next: { revalidate: 60 } });
-	const data = await res.json();
-	return data.posts || [];
+async function getPosts(): Promise<PostDto[]> {
+	const posts = await prisma.post.findMany({
+		include: { categories: true, author: { select: { id: true, name: true, email: true } } },
+		orderBy: { createdAt: "desc" },
+		take: 50,
+	});
+	return posts as unknown as PostDto[];
 }
 
 export default async function Home() {
-	const posts = await fetchPosts();
+	const posts = await getPosts();
 	return (
 		<div>
 			<Navbar />
