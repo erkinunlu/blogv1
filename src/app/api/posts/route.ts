@@ -3,6 +3,7 @@ import { z } from "zod";
 import slugify from "slugify";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/middleware/authMiddleware";
+import type { Prisma } from "@prisma/client";
 
 const schema = z.object({
 	title: z.string().min(3),
@@ -27,19 +28,17 @@ export async function GET(req: NextRequest) {
 	const q = searchParams.get("q") || "";
 	const category = searchParams.get("category");
 
-	const where = {
-		AND: [
-			q
-				? {
-					OR: [
-						{ title: { contains: q } },
-						{ excerpt: { contains: q } },
-					],
-				}
-				: {},
-			category ? { categories: { some: { slug: category } } } : {},
-		],
-	} as const;
+	const where: Prisma.PostWhereInput = {};
+	const andFilters: Prisma.PostWhereInput[] = [];
+	if (q) {
+		andFilters.push({ OR: [{ title: { contains: q } }, { excerpt: { contains: q } }] });
+	}
+	if (category) {
+		andFilters.push({ categories: { some: { slug: category } } });
+	}
+	if (andFilters.length > 0) {
+		where.AND = andFilters;
+	}
 
 	const posts = await prisma.post.findMany({
 		where,
