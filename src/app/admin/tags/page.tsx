@@ -6,7 +6,7 @@ type Tag = { id: number; name: string; slug: string };
 const fetcher = (u: string) => fetch(u).then((r) => r.json());
 
 export default function AdminTags() {
-	const { data, mutate } = useSWR<Tag[]>("/api/tags", (u) => fetcher(u).then((d) => d.tags as Tag[]));
+	const { data, mutate } = useSWR<Tag[]>("/api/tags", (u: string) => fetcher(u).then((d) => d.tags as Tag[]));
 	const [name, setName] = useState("");
 	const [loading, setLoading] = useState(false);
 
