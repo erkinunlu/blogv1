@@ -26,22 +26,23 @@ export async function GET(req: NextRequest) {
 	const { searchParams } = new URL(req.url);
 	const q = searchParams.get("q") || "";
 	const category = searchParams.get("category");
-	const posts = await prisma.post.findMany({
-		where: {
-			AND: [
-				q
-					? {
-						OR: [
-							{ title: { contains: q, mode: "insensitive" } },
-							{ excerpt: { contains: q, mode: "insensitive" } },
-						],
-					}
+
+	const where = {
+		AND: [
+			q
+				? {
+					OR: [
+						{ title: { contains: q } },
+						{ excerpt: { contains: q } },
+					],
+				}
 				: {},
-				category
-					? { categories: { some: { slug: category } } }
-					: {},
-			],
-		},
+			category ? { categories: { some: { slug: category } } } : {},
+		],
+	} as const;
+
+	const posts = await prisma.post.findMany({
+		where,
 		include: { categories: true, author: { select: { id: true, name: true, email: true } } },
 		orderBy: { createdAt: "desc" },
 		take: 50,
