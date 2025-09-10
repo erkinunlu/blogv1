@@ -7,7 +7,7 @@ const fetcher = (u: string) => fetch(u).then((r) => r.json());
 type Category = { id: number; name: string; slug: string };
 
 export default function AdminCategories() {
-	const { data: categories, mutate } = useSWR<Category[]>("/api/categories", (u) => fetcher(u).then((d) => d.categories as Category[]));
+	const { data: categories, mutate } = useSWR<Category[]>("/api/categories", (u: string) => fetcher(u).then((d) => d.categories as Category[]));
 	const [name, setName] = useState("");
 	const [loading, setLoading] = useState(false);
 
