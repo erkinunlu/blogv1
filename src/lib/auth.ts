@@ -1,9 +1,9 @@
-import { sign, verify, type JwtPayload, type Secret, type SignOptions } from "jsonwebtoken";
+import { sign, verify, type JwtPayload, type Secret, type SignOptions, type StringValue } from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { NextRequest } from "next/server";
 
 const JWT_SECRET = (process.env.JWT_SECRET || "") as Secret;
-const JWT_EXPIRES_IN = (process.env.JWT_EXPIRES_IN || "7d") as string | number;
+const JWT_EXPIRES_IN = (process.env.JWT_EXPIRES_IN || "7d") as StringValue;
 
 if (!JWT_SECRET) {
 	throw new Error("JWT_SECRET environment variable is not set");
